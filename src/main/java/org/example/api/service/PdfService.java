@@ -14,8 +14,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 @Service
 public class PdfService {
-        @Autowired
-        Pdfrepo pdfrepo;
+    @Autowired
+    Pdfrepo pdfrepo;
     public void unzipAndSaveToDatabase(byte[] fileBytes) throws IOException {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(fileBytes);
              ZipInputStream zis = new ZipInputStream(bis)) {
@@ -64,14 +64,14 @@ public class PdfService {
 //            return bos.toByteArray();
 //        }
 
-        private String getFilename(String filePath) {
-            int lastSlashIndex = filePath.lastIndexOf("/");
-            if (lastSlashIndex != -1) {
-                return filePath.substring(lastSlashIndex + 1);
-            } else {
-                return filePath;
-            }
+    private String getFilename(String filePath) {
+        int lastSlashIndex = filePath.lastIndexOf("/");
+        if (lastSlashIndex != -1) {
+            return filePath.substring(lastSlashIndex + 1);
+        } else {
+            return filePath;
         }
+    }
 
 
     private String truncateFilename(String filename) {
@@ -100,26 +100,20 @@ public class PdfService {
 //        }
 //    }
 
-        @Transactional
-        public byte[] getPdfContent(String filename) {
-            Pdf p = pdfrepo.findAllByFilename(filename);
-            if (p != null) {
-                return p.getContent();
-            } else {
-                return null;
-            }
+    @Transactional
+    public byte[] getPdfContent(String filename) {
+        Pdf p = pdfrepo.findAllByFilename(filename);
+        if (p != null) {
+            return p.getContent();
+        } else {
+            return null;
         }
-        public List<Pdf> getAllPdf() {
-            return this.pdfrepo.findAll();
-        }
-        public List<String> getAllPdfFilenames() {
-            return pdfrepo.findAllFilenames();
-        }
+    }
+    public List<Pdf> getAllPdf() {
+        return this.pdfrepo.findAll();
+    }
+    public List<String> getAllPdfFilenames() {
+        return pdfrepo.findAllFilenames();
+    }
 
 }
-
-
-
-
-
-

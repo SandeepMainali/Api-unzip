@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sheet Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 2px solid black; /* Add border to cells */
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button[type="submit"] {
+            background-color: #000080; /* Dark blue color */
+            color: #fff; /* White text color */
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button[type="submit"]:hover {
+            background-color: #001a66; /* Darker blue color on hover */
+        }
+    </style>
+</head>
+<body>
+<h1>Sheet Data</h1>
+
+<!-- Form to search for filenames -->
+<form action="/api/sheetdata" method="GET">
+    <label for="filename">Enter Filename:</label>
+    <input type="text" id="filename" name="filename">
+    <button type="submit">Search</button>
+</form>
+
+<!-- Display sheet data if available -->
+<div th:if="${sheetData}">
+    <table>
+        <thead>
+        <tr>
+            <!-- Iterate over the headers of the first row -->
+            <th th:each="header : ${sheetData[0]}" th:text="${header}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over the rows starting from the second row -->
+        <tr th:each="row : ${sheetData.subList(1, sheetData.size())}">
+            <!-- Iterate over the cells of each row -->
+            <td th:each="cell : ${row}" th:text="${cell}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- List all filenames -->
+<h2>All Filenames</h2>
+<ul>
+
+    <li th:each="filename : ${allFilenames}" th:text="${filename}"></li>
+</ul>
+
+</body>
+</html>

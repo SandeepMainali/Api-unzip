@@ -10,6 +10,7 @@ import java.util.List;
 public interface Pdfrepo extends JpaRepository<Pdf,Integer> {
 
     Pdf findAllByFilename(String filename);
+    boolean existsByFilename(String filename);
 
     @Query("SELECT p.filename FROM Pdf p")
     List<String> findAllFilenames();

@@ -1,57 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Product and PDF List</title>
+    <title>PDF List</title>
     <style>
-
-        .form-container {
-            position: relative;
-            top: 10px; /* Adjust as needed */
-            right: 20px; /* Adjust as needed */
-            background-color: white;
-            padding: 10px; /* Decreased padding */
-            border-radius: 5px;
-            /*box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);*/
-        }
-
-        /* Style for the file input */
-        .form-container input[type="file"] {
-            margin-bottom: 5px; /* Adjusted margin */
-        }
-
-        /* Style for the button */
-        .form-container button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 15px; /* Decreased padding */
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        /* Style for button on hover */
-        .form-container button:hover {
-            background-color: #45a049;
-        }
         table {
             margin-top: 10px;
             border-collapse: collapse;
             width: 100%;
         }
+
         th, td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 10px;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         h2 {
             text-align: center;
             color: #00008B;
         }
+
         .table-container {
-            margin-top: 20px; /* Adjust spacing as needed */
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -67,21 +41,19 @@
     </form>
 </div>
 
-<h2>Excel List-Data</h2>
-<input type="text" id="sheetNameInput" onkeyup="searchBySheetName()" placeholder="Search by Sheet Name">
+<h2>PDF List</h2>
+<input type="text" id="filenameInput" onkeyup="searchByFilename()" placeholder="Search by FolderName">
 
 <script>
-    function searchBySheetName() {
-        // Declare variables
+    function searchByFilename() {
         var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("sheetNameInput");
+        input = document.getElementById("filenameInput");
         filter = input.value.toUpperCase();
-        table = document.getElementById("productTableBody");
+        table = document.getElementById("pdfTableBody");
         tr = table.getElementsByTagName("tr");
 
-        // Loop through all table rows, and hide those that don't match the search query
         for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[4]; // Assuming sheetName is in the fifth column
+            td = tr[i].getElementsByTagName("td")[1]; // Assuming folderName is in the second column
             if (td) {
                 txtValue = td.textContent || td.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -93,79 +65,28 @@
         }
     }
 </script>
+
 <div class="table-container">
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Product Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Sheet Name</th>
-    </tr>
-    </thead>
-    <tbody id="productTableBody">
-    <!-- Iterate over products using Thymeleaf -->
-    <tr th:each="item : ${combinedList}">
-        <td th:if="${item.getClass().getSimpleName() == 'Product'}" th:text="${item.productId}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Product'}" th:text="${item.productName}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Product'}" th:text="${item.productDesc}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Product'}" th:text="${item.productPrice}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Product'}" th:text="${item.sheetName}">-</td>
-    </tr>
-    </tbody>
-</table>
-
-<h2>PDF List-Data</h2>
-    <input type="text" id="filenameInput" onkeyup="searchByFilename()" placeholder="Search by FolderName">
-    <script>
-        function searchByFilename() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("filenameInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("pdfTableBody");
-            tr = table.getElementsByTagName("tr");
-
-            // Loop through all table rows, and hide those that don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[1]; // Assuming folderName is in the second column
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
-
     <table>
-    <thead>
-    <tr>
-        <th>Create At</th>
-        <th>Foldername</th>
-        <th>Filename</th>
-        <th>Extension</th>
-<!--        <th>Content</th>-->
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody id="pdfTableBody">
-    <!-- Iterate over PDFs using Thymeleaf -->
-    <tr th:each="item : ${combinedList}">
-        <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.createAt}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.folderName}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.filename}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.extension}">-</td>
-        <td th:if="${item.getClass().getSimpleName() == 'Pdf'}"><a th:href="@{'/view-pdf/' + ${item.filename}}" target="#">View PDF</a></td>
-    </tr>
-    </tbody>
-</table>
-
-<!-- Form to upload Excel file -->
+        <thead>
+        <tr>
+            <th>Create At</th>
+            <th>Foldername</th>
+            <th>Filename</th>
+            <th>Extension</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="pdfTableBody">
+        <tr th:each="item : ${combinedList}">
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.createAt}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.folderName}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.filename}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.extension}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}"><a th:href="@{'/view-pdf/' + ${item.filename}}" target="#">View PDF</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
