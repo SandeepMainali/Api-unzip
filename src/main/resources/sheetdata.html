@@ -27,10 +27,37 @@
         button[type="submit"]:hover {
             background-color: #001a66; /* Darker blue color on hover */
         }
+
+        .table-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-<h1>Sheet Data</h1>
+
+<!-- Add this code to your sheetdata.html -->
+<div th:if="${successMessage}">
+    <p style="color: green;" th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}">
+    <p style="color: red;" th:text="${errorMessage}"></p>
+</div>
+
+<!-- File upload form -->
+<div class="form-container">
+    <form action="/api/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx,.xls,.zip,.pdf">
+        <button type="submit">Upload</button>
+    </form>
+</div>
+
+<!-- List all filenames -->
+<h1>All Filenames</h1>
+<ul th:if="${allFilenames}">
+    <li th:each="filename : ${allFilenames}" th:text="${filename}"></li>
+</ul>
+
+<h2>Sheet Data</h2>
 
 <!-- Form to search for filenames -->
 <form action="/api/sheetdata" method="GET">
@@ -58,12 +85,58 @@
     </table>
 </div>
 
-<!-- List all filenames -->
-<h2>All Filenames</h2>
-<ul>
 
-    <li th:each="filename : ${allFilenames}" th:text="${filename}"></li>
-</ul>
+
+
+
+<!-- PDF List -->
+<h2>PDF List</h2>
+<input type="text" id="filenameInput" onkeyup="searchByFilename()" placeholder="Search by FolderName">
+
+<script>
+    function searchByFilename() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("filenameInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("pdfTableBody");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // Assuming folderName is in the second column
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Create At</th>
+            <th>Foldername</th>
+            <th>Filename</th>
+            <th>Extension</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="pdfTableBody">
+        <tr th:each="item : ${combinedList}">
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.createAt}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.folderName}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.filename}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}" th:text="${item.extension}">-</td>
+            <td th:if="${item.getClass().getSimpleName() == 'Pdf'}"><a th:href="@{'/view-pdf/' + ${item.filename}}" target="#">View PDF</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>
